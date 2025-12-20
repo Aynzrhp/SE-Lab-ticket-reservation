@@ -40,10 +40,10 @@ The backend will include **robust authentication (JWT)**, **reliable session man
 
 #### 1. Register Account  
 **User Story:**  
-> As a new user, I want to create an account with my email and password, so that I can access ticket booking features securely.  
+> As a new user, I want to create an account with my phone number and password, so that I can access ticket booking features securely.  
 
 **Description:**  
-The system should allow new users to create an account to access ticket booking, payment, and reservation history. The process includes email validation and secure password storage.
+The system should allow new users to create an account to access ticket booking, payment, and reservation history. The process includes phone validation and secure password storage.
 
 ---
 
@@ -119,21 +119,12 @@ Allows users to cancel bookings before the departure date, updates seat availabi
 
 ---
 
-#### 10. Reset Password  
+#### 10. Update Profile  
 **User Story:**  
-> As a user, I want to reset my password if I forget it, so that I can regain access to my account securely.  
+> As a user, I want to update my personal information (name, phone, password), so that I can keep my profile accurate and up to date.  
 
 **Description:**  
-Password reset is done through verification (email or SMS) to ensure secure account recovery.
-
----
-
-#### 11. Update Profile  
-**User Story:**  
-> As a user, I want to update my personal information, so that I can keep my profile accurate and up to date.  
-
-**Description:**  
-Users can edit their name, phone number, email, etc., for accurate communication and updates.
+Users can edit their name, phone number, etc., for accurate communication and updates.
 
 ---
 
