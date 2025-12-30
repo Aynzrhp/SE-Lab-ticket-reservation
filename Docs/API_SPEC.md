@@ -66,7 +66,7 @@ Sorting can be supported later:
 
 ## 3. Common Data Models
 
-### 3.1
+### 3.1 User
 
 ```json
 {
@@ -219,10 +219,6 @@ Errors:
 
 - 401 AUTH_INVALID (wrong credentials)
 
-Errors:
-
-401 AUTH_INVALID (wrong credentials)
-
 ## 6. Trips
 
 ### 6.1 List / Search Trips
@@ -234,11 +230,11 @@ GET /trips
 - origin (string)
 - destination (string)
 - date (YYYY-MM-DD), e.g. 2026-01-20
-- page, page_size
+- page
 
 Example:
 
-GET /trips?origin=Ardabil&destination=Tehran&date=2026-01-20&page=1&page_size=10
+GET /trips?origin=Ardabil&destination=Tehran&date=2026-01-20&page=1
 
 Response (200):
 
@@ -445,6 +441,8 @@ Errors:
 DELETE /reservations/{reservationId}
 
 #### Rules
+
+Reservation should belong tgto user himself.
 
 USER can cancel only if:
 
