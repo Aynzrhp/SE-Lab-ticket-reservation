@@ -56,6 +56,14 @@ REST_FRAMEWORK = {
     ),
 }
 
+AUTH_USER_MODEL = "accounts.User"
+
+AUTHENTICATION_BACKENDS = [
+    "accounts.auth_backend.PhoneBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -69,6 +77,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 ROOT_URLCONF = 'config.urls'
 
