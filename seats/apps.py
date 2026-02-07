@@ -2,4 +2,8 @@ from django.apps import AppConfig
 
 
 class SeatsConfig(AppConfig):
-    name = 'seats'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "seats"
+
+    def ready(self):
+        import seats.signals  # noqa
