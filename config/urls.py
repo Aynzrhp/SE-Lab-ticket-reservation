@@ -23,4 +23,5 @@ urlpatterns = [
     path("api/", include("trips.urls")),
     path("api/", include("seats.urls")),
     path("api/", include("reservations.urls")),
+    path("", include("webui.urls")),
 ]
