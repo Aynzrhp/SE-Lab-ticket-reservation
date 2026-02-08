@@ -1,0 +1,24 @@
+<div class="nav">
+  <a href="/trips/">Trips</a>
+  <a href="/reservations/">My Reservations</a>
+  <div class="spacer"></div>
+  <a href="/login/" id="loginLink">Login</a>
+  <a href="#" id="logoutLink" style="display:none;">Logout</a>
+</div>
+
+<script>
+  (function(){
+    const t = localStorage.getItem("access_token");
+    const loginLink = document.getElementById("loginLink");
+    const logoutLink = document.getElementById("logoutLink");
+    if (t) {
+      loginLink.style.display = "none";
+      logoutLink.style.display = "inline";
+      logoutLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("access_token");
+        window.location.href = "/login/";
+      });
+    }
+  })();
+</script>

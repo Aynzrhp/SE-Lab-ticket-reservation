@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Trip Detail</title>
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <div class="container">
+    {% include "_nav.html" %}
+    <h2>Trip Detail</h2>
+
+    <div id="tripBox" class="card"></div>
+
+    <div class="card">
+      <h3>Seats</h3>
+      <small>Select available seats, then click Reserve.</small>
+      <div style="margin:12px 0;">
+        <button id="reserveBtn">Reserve Selected</button>
+        <span id="selInfo" style="margin-left:10px;"></span>
+      </div>
+      <div id="msg" class="error"></div>
+      <div id="grid" class="grid"></div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+  <script>
+    requireAuthOrRedirect();
+
+    // Extract tripId from URL: /trips/<id>/
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    const tripId = parseInt(parts[1], 10);
+
+    const selected = new Set();
+    let seatsCache = [];
+
+    function renderSelectedInfo() {
+      document.getElementById("selInfo").textContent = `Selected: ${[...selected].join(", ") || "-"}`;
+    }
+
+    function renderSeats(seats) {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      seats.forEach(s => {
+        const el = document.createElement("div");
+        el.className = `seat ${s.status}`;
+        el.textContent = s.seat_number;
+        el.title = `seat_id=${s.seat_id}`;
+
+        if (selected.has(s.seat_id)) el.classList.add("selected");
+        if (s.status === "reserved") el.classList.add("reserved");
+
+        el.addEventListener("click", () => {
+          if (s.status !== "available") return;
+          if (selected.has(s.seat_id)) selected.delete(s.seat_id);
+          else selected.add(s.seat_id);
+          renderSelectedInfo();
+          renderSeats(seatsCache);
+        });
+
+        grid.appendChild(el);
+      });
+    }
+
+    async function load() {
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+
+      try {
+        const tripData = await fetchTrip(tripId);
+        const t = tripData.trip;
+        document.getElementById("tripBox").innerHTML = `
+          <div><b>${t.origin}</b> → <b>${t.destination}</b></div>
+          <small>Departure: ${t.departure_time}</small><br/>
+          <small>Price: ${t.price} | Seats: ${t.available_seats}/${t.total_seats}</small>
+        `;
+
+        const seatData = await fetchSeats(tripId);
+        seatsCache = seatData.items;
+        selected.clear();
+        renderSelectedInfo();
+        renderSeats(seatsCache);
+
+      } catch (e) {
+        msg.textContent = `${e.code}: ${e.message}`;
+        if (e.status === 401) logout();
+      }
+    }
+
+    document.getElementById("reserveBtn").addEventListener("click", async () => {
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+
+      const seatIds = [...selected];
+      if (seatIds.length === 0) {
+        msg.textContent = "Please select at least one available seat.";
+        return;
+      }
+
+      try {
+        const r = await createReservation(tripId, seatIds);
+        alert(`Reservation created. ID: ${r.reservation.reservation_id}`);
+        window.location.href = "/reservations/";
+      } catch (e) {
+        msg.textContent = `${e.code}: ${e.message}`;
+      }
+    });
+
+    load();
+  </script>
+</body>
+</html>
